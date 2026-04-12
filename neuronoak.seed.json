@@ -1,0 +1,127 @@
+{
+  "project": "Todo App",
+  "version": "1.0",
+  "description": "Demo project for a simple Todo application.",
+  "data": {
+    "requirements": [
+      {
+        "id": "REQ-01",
+        "title": "Manage todo lifecycle",
+        "desc": "The system shall allow a user to create, edit, and delete todo items via the web interface."
+      },
+      {
+        "id": "REQ-02",
+        "title": "Track completion state",
+        "desc": "The system shall allow a user to mark a todo as done and to revert a done todo to open."
+      },
+      {
+        "id": "REQ-03",
+        "title": "Filter by status",
+        "desc": "The system shall provide todo list filtering for all, open, and done states."
+      },
+      {
+        "id": "REQ-04",
+        "title": "Persist todo data",
+        "desc": "The system shall persist todo data in a local SQLite database so todo state is retained after application restart."
+      },
+      {
+        "id": "REQ-05",
+        "title": "Store extra task context",
+        "desc": "The system shall support optional description and tags fields for each todo item."
+      }
+    ],
+    "tests": [
+      {
+        "id": "TST-01",
+        "target": "REQ-01",
+        "name": "Create todo from form",
+        "action": "Open app, submit title plus optional fields, and verify new item appears in the list."
+      },
+      {
+        "id": "TST-02",
+        "target": "REQ-01",
+        "name": "Edit existing todo",
+        "action": "Click Edit, change title and description, save, and verify list shows updated values."
+      },
+      {
+        "id": "TST-03",
+        "target": "REQ-01",
+        "name": "Delete todo",
+        "action": "Create a todo, click Delete, confirm dialog, and verify item is removed."
+      },
+      {
+        "id": "TST-04",
+        "target": "REQ-02",
+        "name": "Toggle done state",
+        "action": "Click checkbox on an open todo and verify item is styled as completed; click again to reopen."
+      },
+      {
+        "id": "TST-05",
+        "target": "REQ-03",
+        "name": "Filter open and done lists",
+        "action": "Create two todos, complete one, switch between Open and Done filters, and verify correct items are shown."
+      },
+      {
+        "id": "TST-06",
+        "target": "REQ-04",
+        "name": "Data survives restart",
+        "action": "Create a todo, restart Flask server, reload app, and verify the todo is still present."
+      },
+      {
+        "id": "TST-07",
+        "target": "REQ-05",
+        "name": "Persist description and tags",
+        "action": "Create a todo with description and tags, reload page, and verify both fields remain visible."
+      }
+    ],
+    "issues": [
+      {
+        "id": "ISS-01",
+        "type": "Bug",
+        "title": "Edit flow cannot clear description",
+        "status": "Open",
+        "target": "REQ-01",
+        "note": "If edit prompt is cancelled, current UI keeps the previous description and gives no feedback."
+      },
+      {
+        "id": "ISS-02",
+        "type": "Task",
+        "title": "Add pagination for long todo lists",
+        "status": "In Progress",
+        "target": "REQ-03",
+        "note": "Current filter view is functional but not optimized for teams with 200+ todos."
+      },
+      {
+        "id": "ISS-03",
+        "type": "Bug",
+        "title": "Improve validation messaging for empty titles",
+        "status": "Resolved",
+        "target": "REQ-01",
+        "note": "API now returns explicit 'Title is required.' response and tests cover this case."
+      }
+    ],
+    "risks": [
+      {
+        "id": "RSK-01",
+        "title": "Local SQLite lock under concurrent access",
+        "impact": "High",
+        "plan": "Move to server DB (e.g. Postgres) and add retry/backoff handling for write contention.",
+        "target": "REQ-04"
+      },
+      {
+        "id": "RSK-02",
+        "title": "No authentication for todo operations",
+        "impact": "Medium",
+        "plan": "Introduce platform-backed auth headers and restrict API calls per demo user context.",
+        "target": "REQ-01"
+      },
+      {
+        "id": "RSK-03",
+        "title": "Prompt-based editing may reduce usability",
+        "impact": "Low",
+        "plan": "Replace browser prompts with inline form editing and richer client-side validation.",
+        "target": "REQ-05"
+      }
+    ]
+  }
+}

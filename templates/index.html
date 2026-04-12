@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Todo App Demo</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+  </head>
+  <body>
+    <main class="container">
+      <h1>Todo App Demo</h1>
+      <p class="subtitle">Small customer-like project for NeuronOak demos.</p>
+
+      <section class="card">
+        <h2>Create Todo</h2>
+        <form id="todo-form">
+          <label>
+            Title
+            <input id="title" type="text" maxlength="120" required />
+          </label>
+          <label>
+            Description
+            <textarea id="description" rows="3" maxlength="500"></textarea>
+          </label>
+          <label>
+            Tags (comma separated)
+            <input id="tags" type="text" maxlength="120" />
+          </label>
+          <button type="submit">Add Todo</button>
+        </form>
+      </section>
+
+      <section class="card">
+        <h2>Todos</h2>
+        <div class="filters">
+          <button type="button" data-filter="all" class="filter active">All</button>
+          <button type="button" data-filter="open" class="filter">Open</button>
+          <button type="button" data-filter="done" class="filter">Done</button>
+        </div>
+        <p id="status"></p>
+        <ul id="todo-list" class="todo-list"></ul>
+      </section>
+    </main>
+
+    <template id="todo-item-template">
+      <li class="todo-item">
+        <div class="todo-main">
+          <input type="checkbox" class="toggle" />
+          <div class="todo-text">
+            <strong class="todo-title"></strong>
+            <p class="todo-description"></p>
+            <small class="todo-tags"></small>
+          </div>
+        </div>
+        <div class="actions">
+          <button type="button" class="edit">Edit</button>
+          <button type="button" class="delete danger">Delete</button>
+        </div>
+      </li>
+    </template>
+
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+  </body>
+</html>
