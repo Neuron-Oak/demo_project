@@ -9,7 +9,7 @@ DEFAULT_DB_PATH = "todo.db"
 def create_app(test_config=None):
     app = Flask(__name__)
     app.config.from_mapping(
-        DATABASE=os.path.join(app.root_path, DEFAULT_DB_PATH),
+        DATABASE=os.path.join(app.instance_path, DEFAULT_DB_PATH),
     )
 
     if test_config:
@@ -157,7 +157,6 @@ def get_todo(todo_id):
 def query_todos(status):
     db = get_db()
     query = "SELECT * FROM todos"
-    args = ()
 
     if status == "open":
         query += " WHERE done = 0"
@@ -167,7 +166,7 @@ def query_todos(status):
         return []
 
     query += " ORDER BY created_at DESC, id DESC"
-    rows = db.execute(query, args).fetchall()
+    rows = db.execute(query).fetchall()
     return [row_to_dict(row) for row in rows]
 
 

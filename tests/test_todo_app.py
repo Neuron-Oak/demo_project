@@ -6,7 +6,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from todo_app import create_app
+from src.todo_app import create_app
 
 
 @pytest.fixture()
