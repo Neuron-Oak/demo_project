@@ -34,6 +34,18 @@ Then open [http://127.0.0.1:5000](http://127.0.0.1:5000).
 pytest
 ```
 
+## Run frontend tests
+
+```bash
+npm install
+npm run test:frontend
+```
+
+## CI
+
+- `Python Tests` workflow runs `pytest` and uploads `test-results/python/junit.xml` as an artifact.
+- `Frontend Tests` workflow runs Jest and uploads `test-results/frontend/junit.xml` as an artifact.
+
 ## NeuronOak seed data
 
 The file `neuronoak.seed.json` in the repo root is the single source of truth for demo requirements, tests, issues, and risks.

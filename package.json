@@ -1,0 +1,34 @@
+{
+  "name": "demo_project",
+  "version": "1.0.0",
+  "description": "This repository contains a small but realistic customer-style Todo application for NeuronOak demos.",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "npm run test:frontend",
+    "test:frontend": "jest --env=jsdom --ci --runInBand --reporters=default --reporters=jest-junit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Neuron-Oak/demo_project.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Neuron-Oak/demo_project/issues"
+  },
+  "homepage": "https://github.com/Neuron-Oak/demo_project#readme",
+  "jest-junit": {
+    "outputDirectory": "test-results/frontend",
+    "outputName": "junit.xml"
+  },
+  "devDependencies": {
+    "jest": "^30.3.0",
+    "jest-environment-jsdom": "^30.3.0",
+    "jest-junit": "^16.0.0"
+  }
+}
