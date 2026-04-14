@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       OAKCORE_URL: "https://api.staging.neuronoak.com"
-      OAKCORE_PROJECT_ID: "REPLACE_WITH_FIXED_PROJECT_ID"
+      OAKCORE_PROJECT_ID: "550e8400-e29b-11d4-a716-446655440000"
 
     steps:
       - name: Checkout
@@ -40,8 +40,8 @@ jobs:
       - name: Push JUnit report to OakCore
         if: always()
         env:
-          OAKCORE_DEMO_EMAIL: ${{ secrets.OAKCORE_DEMO_EMAIL }}
-          OAKCORE_DEMO_PASSWORD: ${{ secrets.OAKCORE_DEMO_PASSWORD }}
+          OAKCORE_DEMO_EMAIL: "demo@neuronoak.com"
+          OAKCORE_DEMO_PASSWORD: "xk9Km2pLq7vN4wR"
         run: |
           set -euo pipefail
 
