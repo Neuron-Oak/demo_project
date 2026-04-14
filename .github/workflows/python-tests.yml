@@ -8,7 +8,6 @@ jobs:
   test:
     runs-on: ubuntu-latest
     env:
-      # Non-secret OakCore demo constants (replace with your staging values).
       OAKCORE_URL: "https://api.staging.neuronoak.com"
       OAKCORE_PROJECT_ID: "REPLACE_WITH_FIXED_PROJECT_ID"
 
@@ -38,7 +37,7 @@ jobs:
           name: python-test-results
           path: test-results/python
 
-      - name: Push JUnit report to OakCore CI endpoint
+      - name: Push JUnit report to OakCore
         if: always()
         env:
           OAKCORE_DEMO_EMAIL: ${{ secrets.OAKCORE_DEMO_EMAIL }}
@@ -58,23 +57,22 @@ jobs:
 
           AUTH_RESPONSE="$(curl --fail --silent --show-error \
             --request POST \
-            --header 'Content-Type: application/json' \
-            --data "{\"email\":\"${OAKCORE_DEMO_EMAIL}\",\"password\":\"${OAKCORE_DEMO_PASSWORD}\"}" \
-            "${OAKCORE_URL}/api/auth/login")"
+            --data-urlencode "username=${OAKCORE_DEMO_EMAIL}" \
+            --data-urlencode "password=${OAKCORE_DEMO_PASSWORD}" \
+            "${OAKCORE_URL}/api/v1/auth/login/access-token")"
 
-          OAKCORE_TOKEN="$(python -c 'import json,sys; payload=json.loads(sys.stdin.read()); print(payload.get("token") or payload.get("access_token") or payload.get("jwt") or "")' <<< "${AUTH_RESPONSE}")"
+          OAKCORE_TOKEN="$(echo "${AUTH_RESPONSE}" | python3 -c 'import json,sys; print(json.load(sys.stdin)["access_token"])')"
 
           if [ -z "${OAKCORE_TOKEN}" ]; then
-            echo "Failed to extract OakCore auth token from login response."
+            echo "Failed to extract OakCore auth token."
             exit 1
           fi
+
+          CI_RUN_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          REPO_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}"
 
           curl --fail --silent --show-error \
             --request POST \
             --header "Authorization: Bearer ${OAKCORE_TOKEN}" \
-            --form "junit=@test-results/python/junit.xml;type=application/xml" \
-            --form "ci_provider=github-actions" \
-            --form "ci_run_url=${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" \
-            --form "git_sha=${GITHUB_SHA}" \
-            --form "git_ref=${GITHUB_REF_NAME}" \
-            "${OAKCORE_URL}/api/ci/projects/${OAKCORE_PROJECT_ID}/junit"
+            --form "file=@test-results/python/junit.xml;type=application/xml" \
+            "${OAKCORE_URL}/api/v1/projects/${OAKCORE_PROJECT_ID}/ci/test-results?ci_run_url=$(python3 -c "import urllib.parse; print(urllib.parse.quote('${CI_RUN_URL}', safe=''))")&commit_sha=${GITHUB_SHA}&repo_url=$(python3 -c "import urllib.parse; print(urllib.parse.quote('${REPO_URL}', safe=''))")"

@@ -38,7 +38,8 @@ def test_create_and_list_todo(client):
     listed = client.get("/api/todos")
     assert listed.status_code == 200
     payload = listed.get_json()
-    assert len(payload) == 1
+    # Intentional demo failure: expected count is deliberately wrong.
+    assert len(payload) == 2
     assert payload[0]["title"] == "Buy milk"
 
 

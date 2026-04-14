@@ -11,10 +11,10 @@
       {"id": "REQ-05", "title": "Store extra task context", "desc": "The system shall support optional description and tags fields for each todo item."}
     ],
     "tests": [
-      {"id": "TST-01", "target": "REQ-01", "name": "Create todo from form", "action": "Open app, submit title plus optional fields, and verify new item appears in the list.", "ci_name": "tests.test_todo_app::test_create_and_list_todo"},
-      {"id": "TST-02", "target": "REQ-01", "name": "Edit existing todo", "action": "Click Edit, change title and description, save, and verify list shows updated values.", "ci_name": "tests.test_todo_app::test_update_todo"},
-      {"id": "TST-03", "target": "REQ-01", "name": "Delete todo", "action": "Create a todo, click Delete, confirm dialog, and verify item is removed.", "ci_name": "tests.test_todo_app::test_delete_todo"},
-      {"id": "TST-04", "target": "REQ-02", "name": "Toggle done state", "action": "Click checkbox on an open todo and verify item is styled as completed; click again to reopen.", "ci_name": "tests.test_todo_app::test_toggle_and_filter"},
+      {"id": "TST-01", "target": "REQ-01", "name": "Create todo from form", "action": "Open app, submit title plus optional fields, and verify new item appears in the list.", "ci_name": "test_todo_app::test_create_and_list_todo"},
+      {"id": "TST-02", "target": "REQ-01", "name": "Edit existing todo", "action": "Click Edit, change title and description, save, and verify list shows updated values.", "ci_name": "test_todo_app::test_update_todo"},
+      {"id": "TST-03", "target": "REQ-01", "name": "Delete todo", "action": "Create a todo, click Delete, confirm dialog, and verify item is removed.", "ci_name": "test_todo_app::test_delete_todo"},
+      {"id": "TST-04", "target": "REQ-02", "name": "Toggle done state", "action": "Click checkbox on an open todo and verify item is styled as completed; click again to reopen.", "ci_name": "test_todo_app::test_toggle_and_filter"},
       {"id": "TST-05", "target": "REQ-03", "name": "Filter open and done lists", "action": "Create two todos, complete one, switch between Open and Done filters, and verify correct items are shown."},
       {"id": "TST-06", "target": "REQ-04", "name": "Data survives restart", "action": "Create a todo, restart Flask server, reload app, and verify the todo is still present."},
       {"id": "TST-07", "target": "REQ-05", "name": "Persist description and tags", "action": "Create a todo with description and tags, reload page, and verify both fields remain visible."}
