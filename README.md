@@ -43,13 +43,42 @@ Use these commands to generate a JUnit report and push it to a locally running O
 mkdir -p test-results/python
 pytest --junitxml=test-results/python/junit.xml
 
-# 2) Set OakCore connection values
+# 2) Ensure testcase file attributes for source links
+python3 - <<'PY'
+from pathlib import Path
+import xml.etree.ElementTree as ET
+
+report_path = Path("test-results/python/junit.xml")
+tree = ET.parse(report_path)
+root = tree.getroot()
+
+def guess_file_path(classname: str) -> str:
+    parts = [segment for segment in classname.split(".") if segment]
+    if not parts:
+        return ""
+    candidates = ["/".join(parts[:idx]) + ".py" for idx in range(len(parts), 0, -1)]
+    for candidate in candidates:
+        if Path(candidate).exists():
+            return candidate
+    return candidates[0]
+
+for testcase in root.iter("testcase"):
+    if testcase.attrib.get("file"):
+        continue
+    guessed = guess_file_path(testcase.attrib.get("classname", ""))
+    if guessed:
+        testcase.set("file", guessed)
+
+tree.write(report_path, encoding="utf-8", xml_declaration=True)
+PY
+
+# 3) Set OakCore connection values
 export OAKCORE_URL="http://localhost:8000"
 export OAKCORE_PROJECT_ID="550e8400-e29b-11d4-a716-446655440000"
 export OAKCORE_EMAIL="demo@neuronoak.com"
 export OAKCORE_PASSWORD="localpassword"
 
-# 3) Authenticate and upload report
+# 4) Authenticate and upload report
 RUN_ID=$(date +%s)
 TOKEN=$(curl -s -X POST "$OAKCORE_URL/api/v1/auth/login/access-token" \
   -d "username=$OAKCORE_EMAIL&password=$OAKCORE_PASSWORD" \
