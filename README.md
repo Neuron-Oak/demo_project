@@ -50,7 +50,7 @@ python3 -c "import xml.etree.ElementTree as ET; p='test-results/python/junit.xml
 export OAKCORE_URL="http://localhost:8000"
 export OAKCORE_PROJECT_ID="550e8400-e29b-11d4-a716-446655440000"
 export OAKCORE_EMAIL="demo@neuronoak.com"
-export OAKCORE_PASSWORD="xk9Km2pLq7vN4wR"
+export OAKCORE_PASSWORD="localpassword"
 
 # 4) Authenticate and upload report
 RUN_ID=$(date +%s)
