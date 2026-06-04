@@ -1,33 +1,262 @@
 {
+  "schema": "neuronoak-seed/v2",
   "project": "Todo App",
-  "version": "1.0",
-  "description": "Demo project dataset for todo requirements, tests, issues, and risks.",
+  "version": "2.0",
+  "description": "Curated demo dataset for local development: requirements, tests, work items, and risks for a small todo web app with SQLite persistence.",
   "data": {
-    "requirements": [
-      {"id": "REQ-01", "title": "Manage todo lifecycle", "description": "The system shall allow a user to create, edit, and delete todo items via the web interface."},
-      {"id": "REQ-02", "title": "Track completion state", "description": "The system shall allow a user to mark a todo as done and to revert a done todo to open."},
-      {"id": "REQ-03", "title": "Filter by status", "description": "The system shall provide todo list filtering for all, open, and done states."},
-      {"id": "REQ-04", "title": "Persist todo data", "description": "The system shall persist todo data in a local SQLite database so todo state is retained after application restart."},
-      {"id": "REQ-05", "title": "Store extra task context", "description": "The system shall support optional description and tags fields for each todo item."}
+    "nodes": [
+      {
+        "key": "req_manage_todo_lifecycle",
+        "type_slug": "requirement",
+        "title": "Manage todo lifecycle",
+        "status": "approved",
+        "statement": "The system shall allow an authenticated user to create, view, edit, and permanently delete todo items through the web UI. Each operation shall provide clear success or validation feedback.",
+        "source": "Product brief §2.1 — Core user journeys",
+        "tags": ["seed", "domain:core", "priority:must"]
+      },
+      {
+        "key": "req_track_completion_state",
+        "type_slug": "requirement",
+        "title": "Track completion state",
+        "status": "approved",
+        "statement": "The system shall allow a user to mark an open todo as done and to revert a completed todo back to open without losing title, description, or tags.",
+        "source": "Product brief §2.2 — Task state",
+        "tags": ["seed", "domain:core", "priority:must"]
+      },
+      {
+        "key": "req_filter_by_status",
+        "type_slug": "requirement",
+        "title": "Filter todos by status",
+        "status": "submitted",
+        "statement": "The system shall provide list filters for all todos, open todos only, and completed todos only. The active filter shall be visible and shall persist for the duration of the session.",
+        "source": "UX review 2025-11 — List ergonomics",
+        "tags": ["seed", "domain:ux"]
+      },
+      {
+        "key": "req_persist_todo_data",
+        "type_slug": "requirement",
+        "title": "Persist todo data across restarts",
+        "status": "submitted",
+        "statement": "The system shall persist all todo fields in a local SQLite database so that data remains available after application or server restart. No in-memory-only storage shall be used for production demo mode.",
+        "source": "Architecture decision — Local-first demo",
+        "tags": ["seed", "domain:data", "priority:must"]
+      },
+      {
+        "key": "req_store_extra_task_context",
+        "type_slug": "requirement",
+        "title": "Store optional description and tags",
+        "status": "draft",
+        "statement": "The system shall support optional free-text description and a list of string tags on each todo. Empty description and an empty tag list shall be valid states.",
+        "source": "Product brief §2.4 — Rich tasks",
+        "tags": ["seed", "domain:content"]
+      },
+      {
+        "key": "tst_create_todo_from_form",
+        "type_slug": "test",
+        "title": "Create todo from form",
+        "status": "passed",
+        "notes": "Covers happy-path creation including optional description and tags.",
+        "precondition": "Application is running; database is empty or isolated test fixture is loaded.",
+        "test_steps": "1. Open the todo app in a browser.\n2. Enter a unique title and optional description/tags.\n3. Submit the form.\n4. Verify the new item appears at the top of the list with the entered values.",
+        "test_environment": "Chrome latest, local Flask dev server",
+        "test_expected_outcome": "Todo is persisted and visible in the list without page reload errors.",
+        "ci_test_names": ["test_todo_app::test_create_and_list_todo"],
+        "tags": ["seed", "layer:api"]
+      },
+      {
+        "key": "tst_edit_existing_todo",
+        "type_slug": "test",
+        "title": "Edit existing todo",
+        "status": "passed",
+        "notes": "Validates inline or modal edit flow updates persisted fields.",
+        "precondition": "At least one todo exists in the database.",
+        "test_steps": "1. Create a todo with known title and description.\n2. Open edit, change title and description, save.\n3. Reload the page.\n4. Confirm updated values are shown.",
+        "test_expected_outcome": "Stored record matches edited values after reload.",
+        "ci_test_names": ["test_todo_app::test_update_todo"],
+        "tags": ["seed", "layer:api"]
+      },
+      {
+        "key": "tst_delete_todo",
+        "type_slug": "test",
+        "title": "Delete todo with confirmation",
+        "status": "ready",
+        "notes": "Ensures destructive action requires explicit user confirmation.",
+        "test_steps": "1. Create a todo.\n2. Trigger delete and confirm the dialog.\n3. Verify the item is removed from the list and absent after reload.",
+        "test_expected_outcome": "Todo row no longer exists in SQLite.",
+        "ci_test_names": ["test_todo_app::test_delete_todo"],
+        "tags": ["seed", "layer:api"]
+      },
+      {
+        "key": "tst_toggle_done_state",
+        "type_slug": "test",
+        "title": "Toggle done state on checkbox",
+        "status": "passed",
+        "notes": "UI regression guard for completion styling and filter buckets.",
+        "test_steps": "1. Create an open todo.\n2. Click the completion checkbox; verify completed styling.\n3. Click again; verify item returns to open styling.\n4. Switch to Done filter and confirm visibility rules.",
+        "test_expected_outcome": "Status transitions are consistent in UI and database.",
+        "tags": ["seed", "layer:ui"]
+      },
+      {
+        "key": "tst_filter_open_and_done",
+        "type_slug": "test",
+        "title": "Filter open and done lists",
+        "status": "draft",
+        "notes": "Manual UX check; automate when filter endpoints are stable.",
+        "test_steps": "1. Create two todos; mark one done.\n2. Select Open — only open item shown.\n3. Select Done — only completed item shown.\n4. Select All — both visible.",
+        "test_expected_outcome": "Each filter shows the correct subset without stale rows.",
+        "tags": ["seed", "layer:ui"]
+      },
+      {
+        "key": "tst_data_survives_restart",
+        "type_slug": "test",
+        "title": "Data survives server restart",
+        "status": "ready",
+        "notes": "Integration test for SQLite file persistence.",
+        "precondition": "SQLite database file path is configured for the demo environment.",
+        "test_steps": "1. Create a uniquely titled todo.\n2. Stop and restart the Flask process.\n3. Reload the application.\n4. Search the list for the unique title.",
+        "test_expected_outcome": "Todo still exists with identical field values.",
+        "ci_test_names": ["test_todo_app::test_persistence_after_restart"],
+        "tags": ["seed", "layer:integration"]
+      },
+      {
+        "key": "tst_persist_description_and_tags",
+        "type_slug": "test",
+        "title": "Persist description and tags",
+        "status": "draft",
+        "test_steps": "1. Create a todo with multi-line description and three tags.\n2. Reload the page.\n3. Open edit and verify description and tags are intact.",
+        "test_expected_outcome": "Optional fields round-trip through the API unchanged.",
+        "tags": ["seed", "layer:api"]
+      },
+      {
+        "key": "wi_edit_cannot_clear_description",
+        "type_slug": "work-item",
+        "title": "Edit flow cannot clear description",
+        "status": "open",
+        "notes": "When the browser edit prompt is cancelled, the UI keeps the previous description and shows no feedback — confuses reviewers during demos.",
+        "priority": "high",
+        "tags": ["seed", "kind:bug"]
+      },
+      {
+        "key": "wi_pagination_for_large_lists",
+        "type_slug": "work-item",
+        "title": "Add pagination for long todo lists",
+        "status": "in progress",
+        "notes": "Filtering works but rendering 200+ rows blocks the main thread on low-end laptops.",
+        "priority": "medium",
+        "tags": ["seed", "kind:enhancement"]
+      },
+      {
+        "key": "wi_validation_message_empty_title",
+        "type_slug": "work-item",
+        "title": "Validation messaging for empty titles",
+        "status": "done",
+        "notes": "API returns explicit 'Title is required.' and regression tests were added in the demo repo.",
+        "priority": "low",
+        "tags": ["seed", "kind:bug", "resolved"]
+      },
+      {
+        "key": "rsk_sqlite_lock_contention",
+        "type_slug": "risk",
+        "title": "SQLite write lock under concurrent access",
+        "status": "submitted",
+        "notes": "Demo uses embedded SQLite; parallel writes from CI and manual testing can surface 'database is locked'.",
+        "category": "technical",
+        "occurrence": 4,
+        "severity": 8,
+        "mitigation_strategy": "Move demo/staging to PostgreSQL; add bounded retry with exponential backoff on write paths; document single-writer constraint for local SQLite.",
+        "tags": ["seed", "impact:high"]
+      },
+      {
+        "key": "rsk_no_authentication",
+        "type_slug": "risk",
+        "title": "No authentication on todo API",
+        "status": "submitted",
+        "notes": "Any client with network access to the dev server can mutate todos — acceptable for isolated local demo only.",
+        "category": "compliance",
+        "occurrence": 6,
+        "severity": 6,
+        "mitigation_strategy": "Gate demo deployments behind platform auth; require bearer tokens on mutating routes before shared environments.",
+        "tags": ["seed", "impact:medium"]
+      },
+      {
+        "key": "rsk_prompt_based_editing",
+        "type_slug": "risk",
+        "title": "Prompt-based editing reduces usability",
+        "status": "draft",
+        "notes": "Browser prompt() dialogs block accessibility tooling and feel inconsistent with the rest of the canvas UX.",
+        "category": "ethical",
+        "occurrence": 7,
+        "severity": 3,
+        "mitigation_strategy": "Replace prompts with inline form controls in the sidebar; add client-side validation mirroring API rules.",
+        "tags": ["seed", "impact:low"]
+      }
     ],
-    "tests": [
-      {"id": "TST-01", "target": "REQ-01", "title": "Create todo from form", "test_steps": "Open app, submit title plus optional fields, and verify new item appears in the list."},
-      {"id": "TST-02", "target": "REQ-01", "title": "Edit existing todo", "test_steps": "Click Edit, change title and description, save, and verify list shows updated values."},
-      {"id": "TST-03", "target": "REQ-01", "title": "Delete todo", "test_steps": "Create a todo, click Delete, confirm dialog, and verify item is removed."},
-      {"id": "TST-04", "target": "REQ-02", "title": "Toggle done state", "test_steps": "Click checkbox on an open todo and verify item is styled as completed; click again to reopen."},
-      {"id": "TST-05", "target": "REQ-03", "title": "Filter open and done lists", "test_steps": "Create two todos, complete one, switch between Open and Done filters, and verify correct items are shown."},
-      {"id": "TST-06", "target": "REQ-04", "title": "Data survives restart", "test_steps": "Create a todo, restart Flask server, reload app, and verify the todo is still present."},
-      {"id": "TST-07", "target": "REQ-05", "title": "Persist description and tags", "test_steps": "Create a todo with description and tags, reload page, and verify both fields remain visible."}
-    ],
-    "issues": [
-      {"id": "ISS-01", "target": "REQ-01", "title": "Edit flow cannot clear description", "description": "If edit prompt is cancelled, current UI keeps the previous description and gives no feedback.", "type": "Bug","status": "Open"},
-      {"id": "ISS-02", "target": "REQ-03", "title": "Add pagination for long todo lists", "description": "Current filter view is functional but not optimized for teams with 200+ todos.", "type": "Task","status": "In Progress"},
-      {"id": "ISS-03", "target": "REQ-01", "title": "Improve validation messaging for empty titles", "description": "API now returns explicit 'Title is required.' response and tests cover this case.", "type": "Bug", "status": "Resolved"}
-    ],
-    "risks": [
-      {"id": "RSK-01", "target": "REQ-04", "title": "Local SQLite lock under concurrent access", "impact": "High", "plan": "Move to server DB (e.g. Postgres) and add retry/backoff handling for write contention."},
-      {"id": "RSK-02", "target": "REQ-01", "title": "No authentication for todo operations", "impact": "Medium", "plan": "Introduce platform-backed auth headers and restrict API calls per demo user context."},
-      {"id": "RSK-03", "target": "REQ-05", "title": "Prompt-based editing may reduce usability", "impact": "Low", "plan": "Replace browser prompts with inline form editing and richer client-side validation."}
+    "links": [
+      {
+        "from": "req_manage_todo_lifecycle",
+        "to": "tst_create_todo_from_form",
+        "relation_type": "covers"
+      },
+      {
+        "from": "req_manage_todo_lifecycle",
+        "to": "tst_edit_existing_todo",
+        "relation_type": "covers"
+      },
+      {
+        "from": "req_manage_todo_lifecycle",
+        "to": "tst_delete_todo",
+        "relation_type": "covers"
+      },
+      {
+        "from": "req_track_completion_state",
+        "to": "tst_toggle_done_state",
+        "relation_type": "covers"
+      },
+      {
+        "from": "req_filter_by_status",
+        "to": "tst_filter_open_and_done",
+        "relation_type": "covers"
+      },
+      {
+        "from": "req_persist_todo_data",
+        "to": "tst_data_survives_restart",
+        "relation_type": "covers"
+      },
+      {
+        "from": "req_store_extra_task_context",
+        "to": "tst_persist_description_and_tags",
+        "relation_type": "covers"
+      },
+      {
+        "from": "req_manage_todo_lifecycle",
+        "to": "wi_edit_cannot_clear_description",
+        "relation_type": "implements"
+      },
+      {
+        "from": "req_filter_by_status",
+        "to": "wi_pagination_for_large_lists",
+        "relation_type": "implements"
+      },
+      {
+        "from": "req_manage_todo_lifecycle",
+        "to": "wi_validation_message_empty_title",
+        "relation_type": "implements"
+      },
+      {
+        "from": "req_persist_todo_data",
+        "to": "rsk_sqlite_lock_contention",
+        "relation_type": "mitigates"
+      },
+      {
+        "from": "req_manage_todo_lifecycle",
+        "to": "rsk_no_authentication",
+        "relation_type": "mitigates"
+      },
+      {
+        "from": "req_store_extra_task_context",
+        "to": "rsk_prompt_based_editing",
+        "relation_type": "mitigates"
+      }
     ]
   }
 }
