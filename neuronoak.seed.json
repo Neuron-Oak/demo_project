@@ -11,12 +11,7 @@
         "title": "Manage todo lifecycle",
         "status": "approved",
         "statement": "The system shall allow an authenticated user to create, view, edit, and permanently delete todo items through the web UI. Each operation shall provide clear success or validation feedback.",
-        "tags": [
-          "seed",
-          "domain:core",
-          "priority:must"
-        ],
-        "notes": "Source: Product brief §2.1 — Core user journeys"
+        "tags": ["seed", "domain:core", "must-have"]
       },
       {
         "key": "req_track_completion_state",
@@ -24,12 +19,7 @@
         "title": "Track completion state",
         "status": "approved",
         "statement": "The system shall allow a user to mark an open todo as done and to revert a completed todo back to open without losing title, description, or tags.",
-        "tags": [
-          "seed",
-          "domain:core",
-          "priority:must"
-        ],
-        "notes": "Source: Product brief §2.2 — Task state"
+        "tags": ["seed", "domain:core", "must-have"]
       },
       {
         "key": "req_filter_by_status",
@@ -37,11 +27,7 @@
         "title": "Filter todos by status",
         "status": "submitted",
         "statement": "The system shall provide list filters for all todos, open todos only, and completed todos only. The active filter shall be visible and shall persist for the duration of the session.",
-        "tags": [
-          "seed",
-          "domain:ux"
-        ],
-        "notes": "Source: UX review 2025-11 — List ergonomics"
+        "tags": ["seed", "domain:ux"]
       },
       {
         "key": "req_persist_todo_data",
@@ -49,12 +35,7 @@
         "title": "Persist todo data across restarts",
         "status": "submitted",
         "statement": "The system shall persist all todo fields in a local SQLite database so that data remains available after application or server restart. No in-memory-only storage shall be used for production demo mode.",
-        "tags": [
-          "seed",
-          "domain:data",
-          "priority:must"
-        ],
-        "notes": "Source: Architecture decision — Local-first demo"
+        "tags": ["seed", "domain:data", "must-have"]
       },
       {
         "key": "req_store_extra_task_context",
@@ -62,100 +43,67 @@
         "title": "Store optional description and tags",
         "status": "draft",
         "statement": "The system shall support optional free-text description and a list of string tags on each todo. Empty description and an empty tag list shall be valid states.",
-        "tags": [
-          "seed",
-          "domain:content"
-        ],
-        "notes": "Source: Product brief §2.4 — Rich tasks"
+        "tags": ["seed", "domain:content"]
       },
       {
         "key": "tst_create_todo_from_form",
         "type_slug": "test",
         "title": "Create todo from form",
         "status": "passed",
-        "notes": "Covers happy-path creation including optional description and tags.\n\nPrecondition: Application is running; database is empty or isolated test fixture is loaded.\n\nTest Steps: 1. Open the todo app in a browser.\n2. Enter a unique title and optional description/tags.\n3. Submit the form.\n4. Verify the new item appears at the top of the list with the entered values.\n\nTest Environment: Chrome latest, local Flask dev server\n\nTest Expected Outcome: Todo is persisted and visible in the list without page reload errors.",
-        "ci_test_names": [
-          "test_todo_app::test_create_and_list_todo"
-        ],
-        "tags": [
-          "seed",
-          "layer:api"
-        ]
+        "notes": "Covers happy-path creation including optional description and tags.\n\nPrecondition: Application is running; database is empty or isolated test fixture is loaded.\n\nSteps:\n1. Open the todo app in a browser.\n2. Enter a unique title and optional description/tags.\n3. Submit the form.\n4. Verify the new item appears at the top of the list with the entered values.\n\nEnvironment: Chrome latest, local Flask dev server\n\nExpected: Todo is persisted and visible in the list without page reload errors.",
+        "ci_test_names": ["test_todo_app::test_create_and_list_todo"],
+        "tags": ["seed", "layer:api"]
       },
       {
         "key": "tst_edit_existing_todo",
         "type_slug": "test",
         "title": "Edit existing todo",
         "status": "passed",
-        "notes": "Validates inline or modal edit flow updates persisted fields.\n\nPrecondition: At least one todo exists in the database.\n\nTest Steps: 1. Create a todo with known title and description.\n2. Open edit, change title and description, save.\n3. Reload the page.\n4. Confirm updated values are shown.\n\nTest Expected Outcome: Stored record matches edited values after reload.",
-        "ci_test_names": [
-          "test_todo_app::test_update_todo"
-        ],
-        "tags": [
-          "seed",
-          "layer:api"
-        ]
+        "notes": "Validates inline or modal edit flow updates persisted fields.\n\nPrecondition: At least one todo exists in the database.\n\nSteps:\n1. Create a todo with known title and description.\n2. Open edit, change title and description, save.\n3. Reload the page.\n4. Confirm updated values are shown.\n\nExpected: Stored record matches edited values after reload.",
+        "ci_test_names": ["test_todo_app::test_update_todo"],
+        "tags": ["seed", "layer:api"]
       },
       {
         "key": "tst_delete_todo",
         "type_slug": "test",
         "title": "Delete todo with confirmation",
         "status": "ready",
-        "notes": "Ensures destructive action requires explicit user confirmation.\n\nTest Steps: 1. Create a todo.\n2. Trigger delete and confirm the dialog.\n3. Verify the item is removed from the list and absent after reload.\n\nTest Expected Outcome: Todo row no longer exists in SQLite.",
-        "ci_test_names": [
-          "test_todo_app::test_delete_todo"
-        ],
-        "tags": [
-          "seed",
-          "layer:api"
-        ]
+        "notes": "Ensures destructive action requires explicit user confirmation.\n\nSteps:\n1. Create a todo.\n2. Trigger delete and confirm the dialog.\n3. Verify the item is removed from the list and absent after reload.\n\nExpected: Todo row no longer exists in SQLite.",
+        "ci_test_names": ["test_todo_app::test_delete_todo"],
+        "tags": ["seed", "layer:api"]
       },
       {
         "key": "tst_toggle_done_state",
         "type_slug": "test",
         "title": "Toggle done state on checkbox",
         "status": "passed",
-        "notes": "UI regression guard for completion styling and filter buckets.\n\nTest Steps: 1. Create an open todo.\n2. Click the completion checkbox; verify completed styling.\n3. Click again; verify item returns to open styling.\n4. Switch to Done filter and confirm visibility rules.\n\nTest Expected Outcome: Status transitions are consistent in UI and database.",
-        "tags": [
-          "seed",
-          "layer:ui"
-        ]
+        "notes": "UI regression guard for completion styling and filter buckets.\n\nSteps:\n1. Create an open todo.\n2. Click the completion checkbox; verify completed styling.\n3. Click again; verify item returns to open styling.\n4. Switch to Done filter and confirm visibility rules.\n\nExpected: Status transitions are consistent in UI and database.",
+        "tags": ["seed", "layer:ui"]
       },
       {
         "key": "tst_filter_open_and_done",
         "type_slug": "test",
         "title": "Filter open and done lists",
         "status": "draft",
-        "notes": "Manual UX check; automate when filter endpoints are stable.\n\nTest Steps: 1. Create two todos; mark one done.\n2. Select Open — only open item shown.\n3. Select Done — only completed item shown.\n4. Select All — both visible.\n\nTest Expected Outcome: Each filter shows the correct subset without stale rows.",
-        "tags": [
-          "seed",
-          "layer:ui"
-        ]
+        "notes": "Manual UX check; automate when filter endpoints are stable.\n\nSteps:\n1. Create two todos; mark one done.\n2. Select Open — only open item shown.\n3. Select Done — only completed item shown.\n4. Select All — both visible.\n\nExpected: Each filter shows the correct subset without stale rows.",
+        "tags": ["seed", "layer:ui"]
       },
       {
         "key": "tst_data_survives_restart",
         "type_slug": "test",
         "title": "Data survives server restart",
         "status": "ready",
-        "notes": "Integration test for SQLite file persistence.\n\nPrecondition: SQLite database file path is configured for the demo environment.\n\nTest Steps: 1. Create a uniquely titled todo.\n2. Stop and restart the Flask process.\n3. Reload the application.\n4. Search the list for the unique title.\n\nTest Expected Outcome: Todo still exists with identical field values.",
-        "ci_test_names": [
-          "test_todo_app::test_persistence_after_restart"
-        ],
-        "tags": [
-          "seed",
-          "layer:integration"
-        ]
+        "notes": "Integration test for SQLite file persistence.\n\nPrecondition: SQLite database file path is configured for the demo environment.\n\nSteps:\n1. Create a uniquely titled todo.\n2. Stop and restart the Flask process.\n3. Reload the application.\n4. Search the list for the unique title.\n\nExpected: Todo still exists with identical field values.",
+        "ci_test_names": ["test_todo_app::test_persistence_after_restart"],
+        "tags": ["seed", "layer:integration"]
       },
       {
         "key": "tst_persist_description_and_tags",
         "type_slug": "test",
         "title": "Persist description and tags",
         "status": "draft",
-        "tags": [
-          "seed",
-          "layer:api"
-        ],
-        "notes": "Test Steps: 1. Create a todo with multi-line description and three tags.\n2. Reload the page.\n3. Open edit and verify description and tags are intact.\n\nTest Expected Outcome: Optional fields round-trip through the API unchanged."
+        "notes": "Steps:\n1. Create a todo with multi-line description and three tags.\n2. Reload the page.\n3. Open edit and verify description and tags are intact.\n\nExpected: Optional fields round-trip through the API unchanged.",
+        "tags": ["seed", "layer:api"]
       },
       {
         "key": "wi_edit_cannot_clear_description",
@@ -163,11 +111,7 @@
         "title": "Edit flow cannot clear description",
         "status": "open",
         "notes": "When the browser edit prompt is cancelled, the UI keeps the previous description and shows no feedback — confuses reviewers during demos.",
-        "tags": [
-          "seed",
-          "kind:bug",
-          "priority:high"
-        ]
+        "tags": ["seed", "kind:bug"]
       },
       {
         "key": "wi_pagination_for_large_lists",
@@ -175,11 +119,7 @@
         "title": "Add pagination for long todo lists",
         "status": "in progress",
         "notes": "Filtering works but rendering 200+ rows blocks the main thread on low-end laptops.",
-        "tags": [
-          "seed",
-          "kind:enhancement",
-          "priority:medium"
-        ]
+        "tags": ["seed", "kind:enhancement"]
       },
       {
         "key": "wi_validation_message_empty_title",
@@ -187,45 +127,31 @@
         "title": "Validation messaging for empty titles",
         "status": "done",
         "notes": "API returns explicit 'Title is required.' and regression tests were added in the demo repo.",
-        "tags": [
-          "seed",
-          "kind:bug",
-          "resolved",
-          "priority:low"
-        ]
+        "tags": ["seed", "kind:bug", "resolved"]
       },
       {
         "key": "rsk_sqlite_lock_contention",
         "type_slug": "risk",
         "title": "SQLite write lock under concurrent access",
         "status": "submitted",
-        "notes": "Demo uses embedded SQLite; parallel writes from CI and manual testing can surface 'database is locked'.\n\nCategory: technical\n\nOccurrence: 4\n\nSeverity: 8\n\nMitigation Strategy: Move demo/staging to PostgreSQL; add bounded retry with exponential backoff on write paths; document single-writer constraint for local SQLite.",
-        "tags": [
-          "seed",
-          "impact:high"
-        ]
+        "notes": "Demo uses embedded SQLite; parallel writes from CI and manual testing can surface 'database is locked'.\n\nMitigation: Move demo/staging to PostgreSQL; add bounded retry with exponential backoff on write paths; document single-writer constraint for local SQLite.",
+        "tags": ["seed", "impact:high"]
       },
       {
         "key": "rsk_no_authentication",
         "type_slug": "risk",
         "title": "No authentication on todo API",
         "status": "submitted",
-        "notes": "Any client with network access to the dev server can mutate todos — acceptable for isolated local demo only.\n\nCategory: compliance\n\nOccurrence: 6\n\nSeverity: 6\n\nMitigation Strategy: Gate demo deployments behind platform auth; require bearer tokens on mutating routes before shared environments.",
-        "tags": [
-          "seed",
-          "impact:medium"
-        ]
+        "notes": "Any client with network access to the dev server can mutate todos — acceptable for isolated local demo only.\n\nMitigation: Gate demo deployments behind platform auth; require bearer tokens on mutating routes before shared environments.",
+        "tags": ["seed", "impact:medium"]
       },
       {
         "key": "rsk_prompt_based_editing",
         "type_slug": "risk",
         "title": "Prompt-based editing reduces usability",
         "status": "draft",
-        "notes": "Browser prompt() dialogs block accessibility tooling and feel inconsistent with the rest of the canvas UX.\n\nCategory: ethical\n\nOccurrence: 7\n\nSeverity: 3\n\nMitigation Strategy: Replace prompts with inline form controls in the sidebar; add client-side validation mirroring API rules.",
-        "tags": [
-          "seed",
-          "impact:low"
-        ]
+        "notes": "Browser prompt() dialogs block accessibility tooling and feel inconsistent with the rest of the canvas UX.\n\nMitigation: Replace prompts with inline form controls in the sidebar; add client-side validation mirroring API rules.",
+        "tags": ["seed", "impact:low"]
       }
     ],
     "links": [
