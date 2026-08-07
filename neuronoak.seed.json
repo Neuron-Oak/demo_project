@@ -1,8 +1,8 @@
 {
   "schema": "neuronoak-seed/v2",
   "project": "Todo App",
-  "version": "2.0",
-  "description": "Curated demo dataset for local development: requirements, tests, work items, and risks for a small todo web app with SQLite persistence.",
+  "version": "2.1",
+  "description": "Curated demo dataset: requirements, tests, and risks for a small todo web app with SQLite persistence. Planning tasks use issue tracker bindings, not graph nodes.",
   "data": {
     "nodes": [
       {
@@ -106,30 +106,6 @@
         "tags": ["seed", "layer:api"]
       },
       {
-        "key": "wi_edit_cannot_clear_description",
-        "type_slug": "work-item",
-        "title": "Edit flow cannot clear description",
-        "status": "open",
-        "notes": "When the browser edit prompt is cancelled, the UI keeps the previous description and shows no feedback — confuses reviewers during demos.",
-        "tags": ["seed", "kind:bug"]
-      },
-      {
-        "key": "wi_pagination_for_large_lists",
-        "type_slug": "work-item",
-        "title": "Add pagination for long todo lists",
-        "status": "in progress",
-        "notes": "Filtering works but rendering 200+ rows blocks the main thread on low-end laptops.",
-        "tags": ["seed", "kind:enhancement"]
-      },
-      {
-        "key": "wi_validation_message_empty_title",
-        "type_slug": "work-item",
-        "title": "Validation messaging for empty titles",
-        "status": "done",
-        "notes": "API returns explicit 'Title is required.' and regression tests were added in the demo repo.",
-        "tags": ["seed", "kind:bug", "resolved"]
-      },
-      {
         "key": "rsk_sqlite_lock_contention",
         "type_slug": "risk",
         "title": "SQLite write lock under concurrent access",
@@ -189,21 +165,6 @@
         "from": "req_store_extra_task_context",
         "to": "tst_persist_description_and_tags",
         "relation_type": "covers"
-      },
-      {
-        "from": "req_manage_todo_lifecycle",
-        "to": "wi_edit_cannot_clear_description",
-        "relation_type": "implements"
-      },
-      {
-        "from": "req_filter_by_status",
-        "to": "wi_pagination_for_large_lists",
-        "relation_type": "implements"
-      },
-      {
-        "from": "req_manage_todo_lifecycle",
-        "to": "wi_validation_message_empty_title",
-        "relation_type": "implements"
       },
       {
         "from": "req_persist_todo_data",
