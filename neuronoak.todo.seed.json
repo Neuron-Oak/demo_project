@@ -1,0 +1,544 @@
+{
+  "schema": "neuronoak-seed/v2",
+  "project": "Todo App",
+  "version": "4.0",
+  "description": "V-model demo: Todo web app with user/system/component requirements, verification tests, and risks.",
+  "data": {
+    "node_types": [
+      {
+        "slug": "customer-requirement",
+        "template_slug": "requirement",
+        "label": "Customer Requirement",
+        "layer": "customer",
+        "disable_default_slugs": [
+          "requirement"
+        ]
+      },
+      {
+        "slug": "sys-requirement",
+        "template_slug": "requirement",
+        "label": "Sys-Requirement",
+        "layer": "system"
+      },
+      {
+        "slug": "sw-requirement",
+        "template_slug": "requirement",
+        "label": "SW-Requirement",
+        "layer": "software"
+      },
+      {
+        "slug": "test",
+        "rules": {
+          "layer_derivation": {
+            "relations": [
+              "verifies",
+              "tests"
+            ],
+            "direction": "any"
+          }
+        }
+      },
+      {
+        "slug": "risk",
+        "rules": {
+          "layer_derivation": {
+            "relations": [
+              "mitigates",
+              "relates"
+            ],
+            "direction": "any"
+          }
+        }
+      }
+    ],
+    "containers": [
+      {
+        "key": "domain_app",
+        "title": "Todo App",
+        "kind": "feature",
+        "description": "Classic V-model demo — user, system, and component layers",
+        "sort_order": 0
+      },
+      {
+        "key": "feat_user",
+        "title": "User Experience",
+        "kind": "feature",
+        "parent": "domain_app",
+        "description": "End-user goals and acceptance tests",
+        "sort_order": 0
+      },
+      {
+        "key": "feat_system",
+        "title": "System Backend",
+        "kind": "feature",
+        "parent": "domain_app",
+        "description": "API, persistence, and system-level verification",
+        "sort_order": 1
+      },
+      {
+        "key": "feat_component",
+        "title": "UI Components",
+        "kind": "feature",
+        "parent": "domain_app",
+        "description": "Forms, controls, and component tests",
+        "sort_order": 2
+      }
+    ],
+    "nodes": [
+      {
+        "key": "req_user_manage_todos",
+        "type_slug": "customer-requirement",
+        "title": "Users can manage their todos",
+        "status": "approved",
+        "statement": "As a user I shall create, edit, complete, and delete personal todo items through a web UI with clear feedback on every action.",
+        "tags": [
+          "seed",
+          "must-have"
+        ],
+        "container": "feat_user"
+      },
+      {
+        "key": "req_user_find_todos",
+        "type_slug": "customer-requirement",
+        "title": "Users can find todos by status",
+        "status": "approved",
+        "statement": "As a user I shall filter the todo list to all, open, or completed items so I can focus on the work that remains.",
+        "tags": [
+          "seed",
+          "must-have"
+        ],
+        "container": "feat_user"
+      },
+      {
+        "key": "req_sys_todo_lifecycle",
+        "type_slug": "sys-requirement",
+        "title": "System provides todo CRUD API",
+        "status": "approved",
+        "statement": "The system shall expose create, read, update, and delete operations for todo entities with validation errors returned as structured messages.",
+        "tags": [
+          "seed",
+          "must-have"
+        ],
+        "container": "feat_system"
+      },
+      {
+        "key": "req_sys_completion_state",
+        "type_slug": "sys-requirement",
+        "title": "System tracks completion state",
+        "status": "approved",
+        "statement": "The system shall persist an open/done state on each todo and allow reversible transitions without losing title, description, or tags.",
+        "tags": [
+          "seed",
+          "must-have"
+        ],
+        "container": "feat_system"
+      },
+      {
+        "key": "req_sys_filter_lists",
+        "type_slug": "sys-requirement",
+        "title": "System filters lists by status",
+        "status": "submitted",
+        "statement": "The system shall support list queries for all, open-only, and completed-only todos. The active filter shall be visible in the UI for the session.",
+        "tags": [
+          "seed"
+        ],
+        "container": "feat_system"
+      },
+      {
+        "key": "req_sys_persist_sqlite",
+        "type_slug": "sys-requirement",
+        "title": "System persists todos in SQLite",
+        "status": "submitted",
+        "statement": "The system shall store all todo fields in a local SQLite database so data survives process restart. In-memory-only storage is not allowed for demo mode.",
+        "tags": [
+          "seed",
+          "must-have"
+        ],
+        "container": "feat_system"
+      },
+      {
+        "key": "req_cmp_form_create",
+        "type_slug": "sw-requirement",
+        "title": "Create form validates and submits",
+        "status": "approved",
+        "statement": "The create form shall require a non-empty title, accept optional description and tags, and show success feedback when the todo is persisted.",
+        "tags": [
+          "seed"
+        ],
+        "container": "feat_component"
+      },
+      {
+        "key": "req_cmp_edit_inline",
+        "type_slug": "sw-requirement",
+        "title": "Inline edit updates persisted fields",
+        "status": "submitted",
+        "statement": "Inline or modal edit shall update title and description and round-trip through reload without prompt-based dialogs for core fields.",
+        "tags": [
+          "seed"
+        ],
+        "container": "feat_component"
+      },
+      {
+        "key": "req_cmp_delete_confirm",
+        "type_slug": "sw-requirement",
+        "title": "Delete requires confirmation",
+        "status": "approved",
+        "statement": "Destructive delete shall require explicit confirmation and remove the row from UI and SQLite.",
+        "tags": [
+          "seed"
+        ],
+        "container": "feat_component"
+      },
+      {
+        "key": "req_cmp_checkbox_toggle",
+        "type_slug": "sw-requirement",
+        "title": "Checkbox toggles done state",
+        "status": "approved",
+        "statement": "A completion checkbox shall toggle open/done styling and keep filter buckets consistent with persistence.",
+        "tags": [
+          "seed"
+        ],
+        "container": "feat_component"
+      },
+      {
+        "key": "req_cmp_filter_controls",
+        "type_slug": "sw-requirement",
+        "title": "Filter controls switch list subsets",
+        "status": "draft",
+        "statement": "Filter controls for All / Open / Done shall show the correct subset without stale rows after status changes.",
+        "tags": [
+          "seed"
+        ],
+        "container": "feat_component"
+      },
+      {
+        "key": "req_cmp_optional_fields",
+        "type_slug": "sw-requirement",
+        "title": "Optional description and tags persist",
+        "status": "draft",
+        "statement": "Optional free-text description and string tags shall round-trip through the API; empty description and empty tag list are valid.",
+        "tags": [
+          "seed"
+        ],
+        "container": "feat_component"
+      },
+      {
+        "key": "tst_user_acceptance_manage",
+        "type_slug": "test",
+        "title": "Acceptance: manage todos end-to-end",
+        "status": "passed",
+        "notes": "User-level acceptance covering create → edit → complete → delete in one session.",
+        "ci_test_names": [
+          "test_todo_app::test_acceptance_manage_lifecycle"
+        ],
+        "tags": [
+          "seed"
+        ],
+        "container": "feat_user"
+      },
+      {
+        "key": "tst_user_acceptance_filter",
+        "type_slug": "test",
+        "title": "Acceptance: filter by status",
+        "status": "ready",
+        "notes": "User acceptance for All/Open/Done filters with mixed fixtures.",
+        "tags": [
+          "seed"
+        ],
+        "container": "feat_user"
+      },
+      {
+        "key": "tst_sys_api_crud",
+        "type_slug": "test",
+        "title": "API CRUD for todos",
+        "status": "passed",
+        "notes": "System test for create/list/update/delete endpoints.",
+        "ci_test_names": [
+          "test_todo_app::test_create_and_list_todo",
+          "test_todo_app::test_update_todo",
+          "test_todo_app::test_delete_todo"
+        ],
+        "tags": [
+          "seed"
+        ],
+        "container": "feat_system"
+      },
+      {
+        "key": "tst_sys_completion_api",
+        "type_slug": "test",
+        "title": "API completion transitions",
+        "status": "passed",
+        "notes": "System test for open↔done without losing fields.",
+        "ci_test_names": [
+          "test_todo_app::test_toggle_completion"
+        ],
+        "tags": [
+          "seed"
+        ],
+        "container": "feat_system"
+      },
+      {
+        "key": "tst_sys_persistence_restart",
+        "type_slug": "test",
+        "title": "Persistence survives restart",
+        "status": "ready",
+        "notes": "Restart Flask, reload app, assert unique todo still present.",
+        "ci_test_names": [
+          "test_todo_app::test_persistence_after_restart"
+        ],
+        "tags": [
+          "seed"
+        ],
+        "container": "feat_system"
+      },
+      {
+        "key": "tst_sys_filter_query",
+        "type_slug": "test",
+        "title": "List filter query semantics",
+        "status": "failed",
+        "notes": "Failed: Done filter still includes a just-reopened item until hard refresh.",
+        "ci_test_names": [
+          "test_todo_app::test_filter_open_and_done"
+        ],
+        "tags": [
+          "seed"
+        ],
+        "container": "feat_system"
+      },
+      {
+        "key": "tst_cmp_create_form",
+        "type_slug": "test",
+        "title": "Create todo from form",
+        "status": "passed",
+        "notes": "Component UI test for happy-path creation.",
+        "ci_test_names": [
+          "test_todo_app::test_create_form_ui"
+        ],
+        "tags": [
+          "seed"
+        ],
+        "container": "feat_component"
+      },
+      {
+        "key": "tst_cmp_edit_fields",
+        "type_slug": "test",
+        "title": "Edit existing todo fields",
+        "status": "passed",
+        "notes": "Validates edit flow updates persisted fields after reload.",
+        "ci_test_names": [
+          "test_todo_app::test_update_todo"
+        ],
+        "tags": [
+          "seed"
+        ],
+        "container": "feat_component"
+      },
+      {
+        "key": "tst_cmp_delete_confirm",
+        "type_slug": "test",
+        "title": "Delete with confirmation",
+        "status": "ready",
+        "notes": "Ensures confirmation dialog before destructive delete.",
+        "ci_test_names": [
+          "test_todo_app::test_delete_todo"
+        ],
+        "tags": [
+          "seed"
+        ],
+        "container": "feat_component"
+      },
+      {
+        "key": "tst_cmp_checkbox",
+        "type_slug": "test",
+        "title": "Toggle done on checkbox",
+        "status": "passed",
+        "notes": "UI regression for completion styling and filters.",
+        "tags": [
+          "seed"
+        ],
+        "container": "feat_component"
+      },
+      {
+        "key": "tst_cmp_optional_fields",
+        "type_slug": "test",
+        "title": "Persist description and tags",
+        "status": "draft",
+        "notes": "Optional fields round-trip through API.",
+        "tags": [
+          "seed"
+        ],
+        "container": "feat_component"
+      },
+      {
+        "key": "rsk_sqlite_lock",
+        "type_slug": "risk",
+        "title": "SQLite write lock under concurrent access",
+        "status": "submitted",
+        "notes": "Parallel writes from CI and manual testing can surface 'database is locked'.\n\nMitigation: PostgreSQL for shared demos; bounded retry on writes.",
+        "tags": [
+          "seed",
+          "impact:high"
+        ],
+        "container": "feat_system"
+      },
+      {
+        "key": "rsk_no_auth",
+        "type_slug": "risk",
+        "title": "No authentication on todo API",
+        "status": "submitted",
+        "notes": "Any client with network access can mutate todos — local demo only.\n\nMitigation: Gate deployments behind platform auth.",
+        "tags": [
+          "seed",
+          "impact:medium"
+        ],
+        "container": "feat_user"
+      },
+      {
+        "key": "rsk_prompt_editing",
+        "type_slug": "risk",
+        "title": "Prompt-based editing reduces usability",
+        "status": "draft",
+        "notes": "prompt() dialogs hurt accessibility and consistency.\n\nMitigation: Inline form controls in sidebar.",
+        "tags": [
+          "seed",
+          "impact:low"
+        ],
+        "container": "feat_component"
+      },
+      {
+        "key": "rsk_data_loss_on_crash",
+        "type_slug": "risk",
+        "title": "Unflushed writes lost on crash",
+        "status": "draft",
+        "notes": "If the process dies mid-transaction, the last create may not be durable.\n\nMitigation: Explicit commit boundaries; WAL mode.",
+        "tags": [
+          "seed",
+          "impact:medium"
+        ],
+        "container": "feat_system"
+      }
+    ],
+    "links": [
+      {
+        "from": "req_user_manage_todos",
+        "to": "req_sys_todo_lifecycle",
+        "relation_type": "refines"
+      },
+      {
+        "from": "req_user_manage_todos",
+        "to": "req_sys_completion_state",
+        "relation_type": "refines"
+      },
+      {
+        "from": "req_user_find_todos",
+        "to": "req_sys_filter_lists",
+        "relation_type": "refines"
+      },
+      {
+        "from": "req_sys_todo_lifecycle",
+        "to": "req_cmp_form_create",
+        "relation_type": "refines"
+      },
+      {
+        "from": "req_sys_todo_lifecycle",
+        "to": "req_cmp_edit_inline",
+        "relation_type": "refines"
+      },
+      {
+        "from": "req_sys_todo_lifecycle",
+        "to": "req_cmp_delete_confirm",
+        "relation_type": "refines"
+      },
+      {
+        "from": "req_sys_completion_state",
+        "to": "req_cmp_checkbox_toggle",
+        "relation_type": "refines"
+      },
+      {
+        "from": "req_sys_filter_lists",
+        "to": "req_cmp_filter_controls",
+        "relation_type": "refines"
+      },
+      {
+        "from": "req_sys_persist_sqlite",
+        "to": "req_cmp_optional_fields",
+        "relation_type": "refines"
+      },
+      {
+        "from": "req_user_manage_todos",
+        "to": "tst_user_acceptance_manage",
+        "relation_type": "verifies"
+      },
+      {
+        "from": "req_user_find_todos",
+        "to": "tst_user_acceptance_filter",
+        "relation_type": "verifies"
+      },
+      {
+        "from": "req_sys_todo_lifecycle",
+        "to": "tst_sys_api_crud",
+        "relation_type": "verifies"
+      },
+      {
+        "from": "req_sys_completion_state",
+        "to": "tst_sys_completion_api",
+        "relation_type": "verifies"
+      },
+      {
+        "from": "req_sys_persist_sqlite",
+        "to": "tst_sys_persistence_restart",
+        "relation_type": "verifies"
+      },
+      {
+        "from": "req_sys_filter_lists",
+        "to": "tst_sys_filter_query",
+        "relation_type": "verifies"
+      },
+      {
+        "from": "req_cmp_form_create",
+        "to": "tst_cmp_create_form",
+        "relation_type": "verifies"
+      },
+      {
+        "from": "req_cmp_edit_inline",
+        "to": "tst_cmp_edit_fields",
+        "relation_type": "verifies"
+      },
+      {
+        "from": "req_cmp_delete_confirm",
+        "to": "tst_cmp_delete_confirm",
+        "relation_type": "verifies"
+      },
+      {
+        "from": "req_cmp_checkbox_toggle",
+        "to": "tst_cmp_checkbox",
+        "relation_type": "verifies"
+      },
+      {
+        "from": "req_cmp_optional_fields",
+        "to": "tst_cmp_optional_fields",
+        "relation_type": "verifies"
+      },
+      {
+        "from": "req_sys_persist_sqlite",
+        "to": "rsk_sqlite_lock",
+        "relation_type": "mitigates"
+      },
+      {
+        "from": "req_sys_persist_sqlite",
+        "to": "rsk_data_loss_on_crash",
+        "relation_type": "mitigates"
+      },
+      {
+        "from": "req_user_manage_todos",
+        "to": "rsk_no_auth",
+        "relation_type": "mitigates"
+      },
+      {
+        "from": "req_cmp_edit_inline",
+        "to": "rsk_prompt_editing",
+        "relation_type": "mitigates"
+      }
+    ]
+  }
+}
